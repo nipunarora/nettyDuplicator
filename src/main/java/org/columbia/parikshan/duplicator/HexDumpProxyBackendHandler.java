@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package org.columbia.parikshan;
+package org.columbia.parikshan.duplicator;
 
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;

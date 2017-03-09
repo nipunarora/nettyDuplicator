@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package org.columbia.parikshan;
+package org.columbia.parikshan.duplicator;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelOption;
@@ -25,9 +25,19 @@ import io.netty.handler.logging.LoggingHandler;
 
 public final class HexDumpProxy {
 
+    /*
     static final int LOCAL_PORT = Integer.parseInt(System.getProperty("localPort", "8443"));
     static final String REMOTE_HOST = System.getProperty("remoteHost", "www.google.com");
     static final int REMOTE_PORT = Integer.parseInt(System.getProperty("remotePort", "443"));
+    static final String REMOTE_HOST2 = System.getProperty("remoteHost2", "www.google.com");
+    static final int REMOTE_PORT2 = Integer.parseInt(System.getProperty("remotePort2", "443"));
+    */
+
+    static final int LOCAL_PORT = 3378;
+    static final String REMOTE_HOST = "127.0.0.1";
+    static final int REMOTE_PORT = 3379;
+    static final String REMOTE_HOST2 = "127.0.0.1";
+    static final int REMOTE_PORT2 = 3380;
 
     public static void main(String[] args) throws Exception {
         System.err.println("Proxying *:" + LOCAL_PORT + " to " + REMOTE_HOST + ':' + REMOTE_PORT + " ...");
@@ -40,7 +50,7 @@ public final class HexDumpProxy {
             b.group(bossGroup, workerGroup)
              .channel(NioServerSocketChannel.class)
              .handler(new LoggingHandler(LogLevel.INFO))
-             .childHandler(new HexDumpProxyInitializer(REMOTE_HOST, REMOTE_PORT))
+             .childHandler(new HexDumpProxyInitializer(REMOTE_HOST, REMOTE_PORT,REMOTE_HOST2,REMOTE_PORT2))
              .childOption(ChannelOption.AUTO_READ, false)
              .bind(LOCAL_PORT).sync().channel().closeFuture().sync();
         } finally {
