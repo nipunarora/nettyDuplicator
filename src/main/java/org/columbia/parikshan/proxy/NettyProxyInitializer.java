@@ -25,19 +25,14 @@ public class NettyProxyInitializer extends ChannelInitializer<SocketChannel> {
     private final String remoteHost;
     private final int remotePort;
 
-    private final String remoteHost2;
-    private final int remotePort2;
-
-    public NettyProxyInitializer(String remoteHost, int remotePort, String remoteHost2, int remotePort2) {
+    public NettyProxyInitializer(String remoteHost, int remotePort) {
         this.remoteHost = remoteHost;
         this.remotePort = remotePort;
-        this.remoteHost2 = remoteHost2;
-        this.remotePort2 = remotePort2;
     }
 
     @Override
     public void initChannel(SocketChannel ch) {
         //ch.pipeline().addLast(new HexDumpProxyFrontendHandler(remoteHost,remotePort,remoteHost2,remotePort2));
-        ch.pipeline().addLast(new LoggingHandler(LogLevel.DEBUG),new NettyProxyFrontendHandler(remoteHost, remotePort,remoteHost2,remotePort2));
+        ch.pipeline().addLast(new LoggingHandler(LogLevel.DEBUG),new NettyProxyFrontendHandler(remoteHost, remotePort));
     }
 }

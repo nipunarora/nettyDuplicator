@@ -28,38 +28,18 @@ public class NettyProxyFrontendHandler extends ChannelInboundHandlerAdapter {
     private final String remoteHost;
     private final int remotePort;
 
-    private final String remoteHost2;
-    private final int remotePort2;
-
     // As we use inboundChannel.eventLoop() when buildling the Bootstrap this does not need to be volatile as
     // the server2OutboundChannel will use the same EventLoop (and therefore Thread) as the inboundChannel.
     private Channel server2OutboundChannel;
-    private Channel server3OutboundChannel;
 
-    // TODO You should change this to your own executor
-    private ChannelGroup channels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
-
-    public NettyProxyFrontendHandler(String remoteHost, int remotePort, String remoteHost2, int remotePort2) {
+    public NettyProxyFrontendHandler(String remoteHost, int remotePort) {
         this.remoteHost = remoteHost;
         this.remotePort = remotePort;
-        this.remoteHost2 = remoteHost2;
-        this.remotePort2 = remotePort2;
     }
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
         final Channel inboundChannel = ctx.channel();
-
-        // Start the connection attempt to SERVER 3
-        Bootstrap server3Bootstrap = new Bootstrap();
-        server3Bootstrap.group(inboundChannel.eventLoop())
-                .channel(ctx.channel().getClass())
-                // You are only writing traffic to server 3 so you do not need to have a handler for the inbound traffic
-                .handler(new DiscardServerHandler()) // EDIT
-                .option(ChannelOption.AUTO_READ, false);
-        ChannelFuture server3Future = server3Bootstrap.connect(remoteHost, remotePort);
-        server3OutboundChannel = server3Future.channel();
-
 
         // Start the connection attempt to SERVER 2
         Bootstrap server2Bootstrap = new Bootstrap();
@@ -67,7 +47,7 @@ public class NettyProxyFrontendHandler extends ChannelInboundHandlerAdapter {
                 .channel(ctx.channel().getClass())
                 .handler(new NettyProxyBackendHandler(inboundChannel))
                 .option(ChannelOption.AUTO_READ, false);
-        ChannelFuture server2Future = server2Bootstrap.connect(remoteHost2, remotePort2);
+        ChannelFuture server2Future = server2Bootstrap.connect(remoteHost, remotePort);
 
         server2OutboundChannel = server2Future.channel();
         server2Future.addListener(new ChannelFutureListener() {
@@ -82,18 +62,11 @@ public class NettyProxyFrontendHandler extends ChannelInboundHandlerAdapter {
                 }
             }
         });
-
-        // Here we are going to add channels to channel group to save bytebuf work
-        channels.add(server2OutboundChannel);
-        channels.add(server3OutboundChannel);
     }
 
     // You can keep this the same below or use the commented out section
     @Override
-    public void channelRead(final ChannelHandlerContext ctx, Object buf) {
-        // You need to reference count the message +1
-        ByteBuf msg  = (ByteBuf)buf;
-        msg.retain();
+    public void channelRead(final ChannelHandlerContext ctx, Object msg) {
 
         if (server2OutboundChannel.isActive()) {
             server2OutboundChannel.writeAndFlush(msg).addListener(new ChannelFutureListener() {
@@ -108,34 +81,6 @@ public class NettyProxyFrontendHandler extends ChannelInboundHandlerAdapter {
                 }
             });
         }
-        if (server3OutboundChannel.isActive()) {
-            server3OutboundChannel.writeAndFlush(msg).addListener(new ChannelFutureListener() {
-                @Override
-                public void operationComplete(ChannelFuture future) {
-                    if (future.isSuccess()) {
-                        // was able to flush out data, start to read the next chunk
-                        ctx.channel().read();
-                    } else {
-                        future.channel().close();
-                    }
-                }
-            });
-        }
-
-
-        // Optional to the above code instead channel writing automatically cares for reference counting for you
-//        channels.writeAndFlush(msg).addListeners(new ChannelFutureListener() {
-//
-//            @Override
-//            public void operationComplete(ChannelFuture future) throws Exception {
-//                if (future.isSuccess()) {
-//                    // was able to flush out data, start to read the next chunk
-//                    ctx.channel().read();
-//                } else {
-//                    future.channel().close();
-//                }
-//            }
-//        });
     }
 
     @Override
@@ -143,13 +88,6 @@ public class NettyProxyFrontendHandler extends ChannelInboundHandlerAdapter {
         if (server2OutboundChannel != null) {
             closeOnFlush(server2OutboundChannel);
         }
-        if (server3OutboundChannel != null) {
-            closeOnFlush(server3OutboundChannel);
-        }
-
-
-        // Optionally can do this
-//        channels.writeAndFlush(Unpooled.EMPTY_BUFFER).addListener(ChannelFutureListener.CLOSE);
     }
 
     @Override
