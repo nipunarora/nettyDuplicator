@@ -25,18 +25,30 @@
             <artifactId>onejar-maven-plugin</artifactId>
             <version>1.4.4</version>
             <executions>
-            <execution>
-                <id>type2</id>
-                <configuration>
-                    <mainClass>org.columbia.parikshan.duplicator.Duplicator</mainClass>
-                    <attachToBuild>true</attachToBuild>
-                    <classifier>onejar</classifier>
-                    <filename>nettyProxy.jar</filename>
-                </configuration>
-                <goals>
-                    <goal>one-jar</goal>
-                </goals>
-            </execution>
+                <execution>
+                    <id>Duplicator</id>
+                    <configuration>
+                        <mainClass>org.columbia.parikshan.duplicator.Duplicator</mainClass>
+                        <attachToBuild>true</attachToBuild>
+                        <classifier>onejar</classifier>
+                        <filename>duplicator.jar</filename>
+                    </configuration>
+                    <goals>
+                        <goal>one-jar</goal>
+                    </goals>
+                </execution>
+                <execution>
+                    <id>Proxy</id>
+                    <configuration>
+                        <mainClass>org.columbia.parikshan.duplicator.NettyProxy</mainClass>
+                        <attachToBuild>true</attachToBuild>
+                        <classifier>onejar</classifier>
+                        <filename>nettyProxy.jar</filename>
+                    </configuration>
+                    <goals>
+                        <goal>one-jar</goal>
+                    </goals>
+                </execution>
             </executions>
             </plugin>
         </plugins>
