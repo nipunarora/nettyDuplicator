@@ -16,6 +16,7 @@
 package org.columbia.parikshan.duplicator;
 
 import io.netty.bootstrap.Bootstrap;
+import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
@@ -73,6 +74,7 @@ public class HexDumpProxyFrontendHandler extends ChannelInboundHandlerAdapter {
                 .handler(new HexDumpProxyBackendHandler(inboundChannel))
                 .option(ChannelOption.AUTO_READ, false);
         ChannelFuture server2Future = server2Bootstrap.connect(remoteHost2, remotePort2);
+
         server2OutboundChannel = server2Future.channel();
         server2Future.addListener(new ChannelFutureListener() {
             @Override
@@ -94,9 +96,11 @@ public class HexDumpProxyFrontendHandler extends ChannelInboundHandlerAdapter {
 
     // You can keep this the same below or use the commented out section
     @Override
-    public void channelRead(final ChannelHandlerContext ctx, Object msg) {
+    public void channelRead(final ChannelHandlerContext ctx, Object buf) {
         // You need to reference count the message +1
-        //msg.retain();
+        ByteBuf msg  = (ByteBuf)buf;
+        msg.retain();
+
         if (server2OutboundChannel.isActive()) {
             server2OutboundChannel.writeAndFlush(msg).addListener(new ChannelFutureListener() {
                 @Override
