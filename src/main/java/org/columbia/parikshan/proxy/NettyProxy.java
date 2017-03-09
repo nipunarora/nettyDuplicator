@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package org.columbia.parikshan.duplicator;
+package org.columbia.parikshan.proxy;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelOption;
@@ -23,7 +23,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 
-public final class HexDumpProxy {
+public final class NettyProxy {
 
     /*
     static final int LOCAL_PORT = Integer.parseInt(System.getProperty("localPort", "8443"));
@@ -50,7 +50,7 @@ public final class HexDumpProxy {
             b.group(bossGroup, workerGroup)
              .channel(NioServerSocketChannel.class)
              .handler(new LoggingHandler(LogLevel.DEBUG))
-             .childHandler(new HexDumpProxyInitializer(REMOTE_HOST, REMOTE_PORT,REMOTE_HOST2,REMOTE_PORT2))
+             .childHandler(new NettyProxyInitializer(REMOTE_HOST, REMOTE_PORT,REMOTE_HOST2,REMOTE_PORT2))
              .childOption(ChannelOption.AUTO_READ, false)
              .bind(LOCAL_PORT).sync().channel().closeFuture().sync();
         } finally {

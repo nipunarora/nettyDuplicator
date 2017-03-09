@@ -29,7 +29,7 @@ import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.util.concurrent.GlobalEventExecutor;
 
-public class HexDumpProxyFrontendHandler extends ChannelInboundHandlerAdapter {
+public class DuplicatorFrontendHandler extends ChannelInboundHandlerAdapter {
 
     private final String remoteHost;
     private final int remotePort;
@@ -45,7 +45,7 @@ public class HexDumpProxyFrontendHandler extends ChannelInboundHandlerAdapter {
     // TODO You should change this to your own executor
     private ChannelGroup channels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
 
-    public HexDumpProxyFrontendHandler(String remoteHost, int remotePort, String remoteHost2, int remotePort2) {
+    public DuplicatorFrontendHandler(String remoteHost, int remotePort, String remoteHost2, int remotePort2) {
         this.remoteHost = remoteHost;
         this.remotePort = remotePort;
         this.remoteHost2 = remoteHost2;
@@ -71,7 +71,7 @@ public class HexDumpProxyFrontendHandler extends ChannelInboundHandlerAdapter {
         Bootstrap server2Bootstrap = new Bootstrap();
         server2Bootstrap.group(inboundChannel.eventLoop())
                 .channel(ctx.channel().getClass())
-                .handler(new HexDumpProxyBackendHandler(inboundChannel))
+                .handler(new DuplicatorBackendHandler(inboundChannel))
                 .option(ChannelOption.AUTO_READ, false);
         ChannelFuture server2Future = server2Bootstrap.connect(remoteHost2, remotePort2);
 

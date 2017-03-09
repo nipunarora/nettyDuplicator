@@ -19,9 +19,8 @@ import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
-import io.netty.util.concurrent.GlobalEventExecutor;
 
-public class HexDumpProxyInitializer extends ChannelInitializer<SocketChannel> {
+public class DuplicatorProxyInitializer extends ChannelInitializer<SocketChannel> {
 
     private final String remoteHost;
     private final int remotePort;
@@ -29,7 +28,7 @@ public class HexDumpProxyInitializer extends ChannelInitializer<SocketChannel> {
     private final String remoteHost2;
     private final int remotePort2;
 
-    public HexDumpProxyInitializer(String remoteHost, int remotePort, String remoteHost2, int remotePort2) {
+    public DuplicatorProxyInitializer(String remoteHost, int remotePort, String remoteHost2, int remotePort2) {
         this.remoteHost = remoteHost;
         this.remotePort = remotePort;
         this.remoteHost2 = remoteHost2;
@@ -39,6 +38,6 @@ public class HexDumpProxyInitializer extends ChannelInitializer<SocketChannel> {
     @Override
     public void initChannel(SocketChannel ch) {
         //ch.pipeline().addLast(new HexDumpProxyFrontendHandler(remoteHost,remotePort,remoteHost2,remotePort2));
-        ch.pipeline().addLast(new LoggingHandler(LogLevel.DEBUG),new HexDumpProxyFrontendHandler(remoteHost, remotePort,remoteHost2,remotePort2));
+        ch.pipeline().addLast(new LoggingHandler(LogLevel.DEBUG),new DuplicatorFrontendHandler(remoteHost, remotePort,remoteHost2,remotePort2));
     }
 }

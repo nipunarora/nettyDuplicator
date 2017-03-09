@@ -28,7 +28,7 @@
             <execution>
                 <id>type2</id>
                 <configuration>
-                    <mainClass>org.columbia.parikshan.duplicator.HexDumpProxy</mainClass>
+                    <mainClass>org.columbia.parikshan.duplicator.Duplicator</mainClass>
                     <attachToBuild>true</attachToBuild>
                     <classifier>onejar</classifier>
                     <filename>nettyProxy.jar</filename>
