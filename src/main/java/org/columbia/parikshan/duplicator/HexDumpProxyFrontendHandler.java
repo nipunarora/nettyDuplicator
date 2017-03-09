@@ -72,7 +72,7 @@ public class HexDumpProxyFrontendHandler extends ChannelInboundHandlerAdapter {
                 .channel(ctx.channel().getClass())
                 .handler(new HexDumpProxyBackendHandler(inboundChannel))
                 .option(ChannelOption.AUTO_READ, false);
-        ChannelFuture server2Future = server2Bootstrap.connect(remoteHost, remotePort);
+        ChannelFuture server2Future = server2Bootstrap.connect(remoteHost2, remotePort2);
         server2OutboundChannel = server2Future.channel();
         server2Future.addListener(new ChannelFutureListener() {
             @Override
