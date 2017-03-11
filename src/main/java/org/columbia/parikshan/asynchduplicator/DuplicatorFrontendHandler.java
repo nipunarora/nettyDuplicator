@@ -13,18 +13,12 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package org.columbia.parikshan.duplicator;
+package org.columbia.parikshan.asynchduplicator;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.ByteBuf;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelFutureListener;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelOption;
-
 import io.netty.buffer.Unpooled;
-import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.channel.*;
 import io.netty.channel.group.ChannelGroup;
 import io.netty.channel.group.DefaultChannelGroup;
 import io.netty.util.concurrent.GlobalEventExecutor;
@@ -43,7 +37,7 @@ public class DuplicatorFrontendHandler extends ChannelInboundHandlerAdapter {
     private Channel server3OutboundChannel;
 
     // TODO You should change this to your own executor
-    private ChannelGroup channels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
+    //private ChannelGroup channels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
 
     public DuplicatorFrontendHandler(String remoteHost, int remotePort, String remoteHost2, int remotePort2) {
         this.remoteHost = remoteHost;
@@ -90,8 +84,8 @@ public class DuplicatorFrontendHandler extends ChannelInboundHandlerAdapter {
         });
 
         // Here we are going to add channels to channel group to save bytebuf work
-        channels.add(server2OutboundChannel);
-        channels.add(server3OutboundChannel);
+        //channels.add(server2OutboundChannel);
+        //channels.add(server3OutboundChannel);
     }
 
     // You can keep this the same below or use the commented out section

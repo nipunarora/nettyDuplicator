@@ -43,7 +43,7 @@ public class DuplicatorFrontendHandler extends ChannelInboundHandlerAdapter {
     private Channel server3OutboundChannel;
 
     // TODO You should change this to your own executor
-    private ChannelGroup channels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
+    //private ChannelGroup channels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
 
     public DuplicatorFrontendHandler(String remoteHost, int remotePort, String remoteHost2, int remotePort2) {
         this.remoteHost = remoteHost;
@@ -90,8 +90,8 @@ public class DuplicatorFrontendHandler extends ChannelInboundHandlerAdapter {
         });
 
         // Here we are going to add channels to channel group to save bytebuf work
-        channels.add(server2OutboundChannel);
-        channels.add(server3OutboundChannel);
+        //channels.add(server2OutboundChannel);
+        //channels.add(server3OutboundChannel);
     }
 
     // You can keep this the same below or use the commented out section

@@ -1,5 +1,5 @@
 
-package org.columbia.parikshan.duplicator;
+package org.columbia.parikshan.asynchduplicator;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelOption;

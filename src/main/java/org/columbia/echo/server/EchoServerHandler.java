@@ -1,4 +1,4 @@
-package server;
+package org.columbia.echo.server;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;

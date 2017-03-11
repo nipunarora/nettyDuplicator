@@ -1,4 +1,4 @@
-package server;
+package org.columbia.echo.serverSleep;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -13,9 +13,11 @@ import java.net.InetSocketAddress;
 public class EchoServer {
 
     private final int port;
+    public static int sleepSeconds;
 
-    public EchoServer(int port) {
+    public EchoServer(int port,int seconds) {
         this.port = port;
+        sleepSeconds = seconds;
     }
 
     public static void main(String[] args) throws Exception {
@@ -23,7 +25,7 @@ public class EchoServer {
             System.err.println("Usage: " + EchoServer.class.getSimpleName() + " <port>");
             return;
         }
-        new EchoServer(Integer.parseInt(args[0])).start();
+        new EchoServer(Integer.parseInt(args[0]), Integer.parseInt(args[1])).start();
     }
 
     public void start() throws Exception {

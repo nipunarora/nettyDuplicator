@@ -1,4 +1,4 @@
-package org.columbia.parikshan.duplicator;
+package org.columbia.parikshan.asynchduplicator;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;

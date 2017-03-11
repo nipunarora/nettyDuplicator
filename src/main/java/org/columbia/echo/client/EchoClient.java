@@ -1,4 +1,4 @@
-package client;
+package org.columbia.echo.client;
 
 
 import io.netty.bootstrap.Bootstrap;

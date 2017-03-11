@@ -13,13 +13,9 @@
  * License for the specific language governing permissions and limitations
  * under the License.
  */
-package org.columbia.parikshan.duplicator;
+package org.columbia.parikshan.asynchduplicator;
 
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelFutureListener;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.channel.*;
 
 public class DuplicatorBackendHandler extends ChannelInboundHandlerAdapter {
 
