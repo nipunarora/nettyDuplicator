@@ -56,24 +56,13 @@ public class DuplicatorFrontendHandler extends ChannelInboundHandlerAdapter {
     public void channelActive(ChannelHandlerContext ctx) {
         final Channel inboundChannel = ctx.channel();
 
-        // Start the connection attempt to SERVER 3
-        Bootstrap server3Bootstrap = new Bootstrap();
-        server3Bootstrap.group(inboundChannel.eventLoop())
-                .channel(ctx.channel().getClass())
-                // You are only writing traffic to server 3 so you do not need to have a handler for the inbound traffic
-                .handler(new DiscardServerHandler()) // EDIT
-                .option(ChannelOption.AUTO_READ, false);
-        ChannelFuture server3Future = server3Bootstrap.connect(remoteHost, remotePort);
-        server3OutboundChannel = server3Future.channel();
-
-
         // Start the connection attempt to SERVER 2
         Bootstrap server2Bootstrap = new Bootstrap();
         server2Bootstrap.group(inboundChannel.eventLoop())
                 .channel(ctx.channel().getClass())
                 .handler(new DuplicatorBackendHandler(inboundChannel))
                 .option(ChannelOption.AUTO_READ, false);
-        ChannelFuture server2Future = server2Bootstrap.connect(remoteHost2, remotePort2);
+        ChannelFuture server2Future = server2Bootstrap.connect(remoteHost, remotePort);
 
         server2OutboundChannel = server2Future.channel();
         server2Future.addListener(new ChannelFutureListener() {
@@ -88,6 +77,16 @@ public class DuplicatorFrontendHandler extends ChannelInboundHandlerAdapter {
                 }
             }
         });
+
+        // Start the connection attempt to SERVER 3
+        Bootstrap server3Bootstrap = new Bootstrap();
+        server3Bootstrap.group(inboundChannel.eventLoop())
+                .channel(ctx.channel().getClass())
+                // You are only writing traffic to server 3 so you do not need to have a handler for the inbound traffic
+                .handler(new DiscardServerHandler()) // EDIT
+                .option(ChannelOption.AUTO_READ, false);
+        ChannelFuture server3Future = server3Bootstrap.connect(remoteHost2, remotePort2);
+        server3OutboundChannel = server3Future.channel();
 
         // Here we are going to add channels to channel group to save bytebuf work
         //channels.add(server2OutboundChannel);
@@ -114,8 +113,10 @@ public class DuplicatorFrontendHandler extends ChannelInboundHandlerAdapter {
                 }
             });
         }
+
         if (server3OutboundChannel.isActive()) {
-            server3OutboundChannel.writeAndFlush(msg).addListener(new ChannelFutureListener() {
+            server3OutboundChannel.writeAndFlush(msg)
+                    .addListener(new ChannelFutureListener() {
                 @Override
                 public void operationComplete(ChannelFuture future) {
                     if (future.isSuccess()) {
