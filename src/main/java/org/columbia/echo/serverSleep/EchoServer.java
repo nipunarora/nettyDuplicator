@@ -21,7 +21,7 @@ public class EchoServer {
     }
 
     public static void main(String[] args) throws Exception {
-        if(args.length != 1) {
+        if(args.length != 2) {
             System.err.println("Usage: " + EchoServer.class.getSimpleName() + " <port>");
             return;
         }

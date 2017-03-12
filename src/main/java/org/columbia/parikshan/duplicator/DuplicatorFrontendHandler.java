@@ -87,7 +87,7 @@ public class DuplicatorFrontendHandler extends ChannelInboundHandlerAdapter {
                 .option(ChannelOption.AUTO_READ, false);
         ChannelFuture server3Future = server3Bootstrap.connect(remoteHost2, remotePort2);
         server3OutboundChannel = server3Future.channel();
-
+        System.out.println("High Water Mark" + server3OutboundChannel.config().getWriteBufferHighWaterMark());
         // Here we are going to add channels to channel group to save bytebuf work
         //channels.add(server2OutboundChannel);
         //channels.add(server3OutboundChannel);
@@ -115,18 +115,24 @@ public class DuplicatorFrontendHandler extends ChannelInboundHandlerAdapter {
         }
 
         if (server3OutboundChannel.isActive()) {
-            server3OutboundChannel.writeAndFlush(msg)
-                    .addListener(new ChannelFutureListener() {
-                @Override
-                public void operationComplete(ChannelFuture future) {
-                    if (future.isSuccess()) {
-                        // was able to flush out data, start to read the next chunk
-                        ctx.channel().read();
-                    } else {
-                        future.channel().close();
-                    }
-                }
-            });
+            if(server3OutboundChannel.isWritable()) {
+                System.out.println("Writing and Flushing");
+                server3OutboundChannel.writeAndFlush(msg)
+                        .addListener(new ChannelFutureListener() {
+                            @Override
+                            public void operationComplete(ChannelFuture future) {
+                                if (future.isSuccess()) {
+                                    // was able to flush out data, start to read the next chunk
+                                    //System.out.println(server3OutboundChannel.bytesBeforeUnwritable());
+                                    ctx.channel().read();
+                                } else {
+                                    future.channel().close();
+                                }
+                            }
+                        });
+            }else{
+                System.out.println("Loop 1: Channel is no longer writeable");
+            }
         }
 
 
