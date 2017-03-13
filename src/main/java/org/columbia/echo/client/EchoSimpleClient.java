@@ -18,9 +18,26 @@ public class EchoSimpleClient
         String sentence;
         String modifiedSentence;
         BufferedReader inFromUser = new BufferedReader( new InputStreamReader(System.in));
-        Socket clientSocket = new Socket(host, port);
+        final Socket clientSocket = new Socket(host, port);
         DataOutputStream outToServer = new DataOutputStream(clientSocket.getOutputStream());
         BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            public void run() {
+                try {
+                    Thread.sleep(200);
+                    System.out.println("Shouting down ...");
+                    //some cleaning up code...
+                    clientSocket.close();
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
 
         while(true) {
             sentence = inFromUser.readLine();
@@ -28,7 +45,7 @@ public class EchoSimpleClient
             modifiedSentence = inFromServer.readLine();
             System.out.println("FROM SERVER: " + modifiedSentence);
         }
-        
+
         //clientSocket.close();
     }
 }
