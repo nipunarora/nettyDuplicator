@@ -10,14 +10,21 @@ public class EchoSimpleServer
 {
     public static void main(String[] args) throws IOException
     {
+        if(args.length != 1) {
+            System.err.println("Usage: " + EchoServer.class.getSimpleName() + " <port>");
+            return;
+        }
         ServerSocket serverSocket = null;
+        int port = Integer.parseInt(args[0]);
 
+        System.out.println("Listening on port " + port);
+         
         try {
-            serverSocket = new ServerSocket(10007);
+            serverSocket = new ServerSocket(port);
         }
         catch (IOException e)
         {
-            System.err.println("Could not listen on port: 10007.");
+            System.err.println("Could not listen on port:" + port);
             System.exit(1);
         }
 
