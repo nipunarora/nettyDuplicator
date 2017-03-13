@@ -41,9 +41,11 @@ public class EchoSimpleClient
 
         while(true) {
             sentence = inFromUser.readLine();
+            System.out.println("Send to server " + sentence);
             outToServer.writeBytes(sentence + '\n');
-            modifiedSentence = inFromServer.readLine();
-            System.out.println("FROM SERVER: " + modifiedSentence);
+            outToServer.flush();
+            //modifiedSentence = inFromServer.readLine();
+            //System.out.println("FROM SERVER: " + modifiedSentence);
         }
 
         //clientSocket.close();

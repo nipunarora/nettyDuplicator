@@ -45,12 +45,25 @@ public class EchoSimpleServer
         System.out.println ("Connection successful");
         System.out.println ("Waiting for input.....");
 
-        PrintWriter out = new PrintWriter(clientSocket.getOutputStream(),
-                true);
-        BufferedReader in = new BufferedReader(
-                new InputStreamReader( clientSocket.getInputStream()));
+        final Socket finalClientSocket = clientSocket;
+        final ServerSocket finalServerSocket = serverSocket;
 
-        String inputLine;
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            public void run() {
+                try {
+                    Thread.sleep(200);
+                    System.out.println("Shouting down ...");
+                    //some cleaning up code...
+                    finalClientSocket.close();
+                    finalServerSocket.close();
+                } catch (InterruptedException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
         try {
             sleep(50000000);
@@ -58,6 +71,15 @@ public class EchoSimpleServer
             e.printStackTrace();
         }
         /*
+
+        final PrintWriter out = new PrintWriter(clientSocket.getOutputStream(),
+                true);
+        final BufferedReader in = new BufferedReader(
+                new InputStreamReader( clientSocket.getInputStream()));
+
+        String inputLine;
+
+
         while ((inputLine = in.readLine()) != null)
         {
             System.out.println ("Server: " + inputLine);
