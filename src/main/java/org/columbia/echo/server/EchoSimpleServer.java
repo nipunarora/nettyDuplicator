@@ -6,6 +6,8 @@ package org.columbia.echo.server;
 import java.net.*;
 import java.io.*;
 
+import static java.lang.Thread.sleep;
+
 public class EchoSimpleServer
 {
     public static void main(String[] args) throws IOException
@@ -18,7 +20,7 @@ public class EchoSimpleServer
         int port = Integer.parseInt(args[0]);
 
         System.out.println("Listening on port " + port);
-         
+
         try {
             serverSocket = new ServerSocket(port);
         }
@@ -50,6 +52,11 @@ public class EchoSimpleServer
 
         String inputLine;
 
+        try {
+            sleep(50000000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         /*
         while ((inputLine = in.readLine()) != null)
         {
