@@ -38,9 +38,9 @@ public class EchoSimpleClient
             }
         });
 
+        sentence = inFromUser.readLine();
 
         while(true) {
-            sentence = inFromUser.readLine();
             System.out.println("Send to server " + sentence);
             outToServer.writeBytes(sentence + '\n');
             outToServer.flush();
