@@ -7,6 +7,8 @@ public class EchoSimpleClient
 {
     public static void main(String args[]) throws Exception
     {
+
+        int counter = 0;
         if(args.length != 2) {
             System.err.println("Usage: " + EchoClient.class.getSimpleName() + " <host> <port>");
             return;
@@ -41,7 +43,7 @@ public class EchoSimpleClient
         sentence = inFromUser.readLine();
 
         while(true) {
-            System.out.println("Send to server " + sentence);
+            System.out.println(++counter + ".Send to server " + sentence);
             outToServer.writeBytes(sentence + '\n');
             outToServer.flush();
             //modifiedSentence = inFromServer.readLine();
