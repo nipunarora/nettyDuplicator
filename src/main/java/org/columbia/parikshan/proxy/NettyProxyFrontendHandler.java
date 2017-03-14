@@ -69,19 +69,24 @@ public class NettyProxyFrontendHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(final ChannelHandlerContext ctx, Object msg) {
 
         if (server2OutboundChannel.isActive()) {
-            server2OutboundChannel.writeAndFlush(msg).addListener(new ChannelFutureListener() {
-                @Override
-                public void operationComplete(ChannelFuture future) {
-                    if (future.isSuccess()) {
-                        // was able to flush out data, start to read the next chunk
-                        System.out.println(server2OutboundChannel.bytesBeforeUnwritable());
-                        if(server2OutboundChannel.isWritable())
+            if(server2OutboundChannel.isWritable()) {
+                server2OutboundChannel.writeAndFlush(msg).addListener(new ChannelFutureListener() {
+                    @Override
+                    public void operationComplete(ChannelFuture future) {
+                        if (future.isSuccess()) {
+                            // was able to flush out data, start to read the next chunk
+                            //System.out.println(server2OutboundChannel.bytesBeforeUnwritable());
                             ctx.channel().read();
-                    } else {
-                        future.channel().close();
+                        } else {
+                            future.channel().close();
+                        }
                     }
-                }
-            });
+                });
+            }else{
+                System.out.println("Channel is no longer writeable");
+                System.out.println(server2OutboundChannel.bytesBeforeUnwritable());
+                System.out.println(server2OutboundChannel.bytesBeforeWritable());
+            }
         }
     }
 
