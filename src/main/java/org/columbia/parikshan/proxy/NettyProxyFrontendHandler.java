@@ -27,7 +27,7 @@ public class NettyProxyFrontendHandler extends ChannelInboundHandlerAdapter {
 
     private final String remoteHost;
     private final int remotePort;
-
+    public static int counter = 0;
     // As we use inboundChannel.eventLoop() when buildling the Bootstrap this does not need to be volatile as
     // the server2OutboundChannel will use the same EventLoop (and therefore Thread) as the inboundChannel.
     private Channel server2OutboundChannel;
@@ -75,7 +75,7 @@ public class NettyProxyFrontendHandler extends ChannelInboundHandlerAdapter {
                     public void operationComplete(ChannelFuture future) {
                         if (future.isSuccess()) {
                             // was able to flush out data, start to read the next chunk
-                            //System.out.println(server2OutboundChannel.bytesBeforeUnwritable());
+                            System.out.println(counter++ +" Bytes Before UnWritable->" + server2OutboundChannel.bytesBeforeUnwritable());
                             ctx.channel().read();
                         } else {
                             future.channel().close();
