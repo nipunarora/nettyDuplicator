@@ -74,7 +74,9 @@ public class NettyProxyFrontendHandler extends ChannelInboundHandlerAdapter {
                 public void operationComplete(ChannelFuture future) {
                     if (future.isSuccess()) {
                         // was able to flush out data, start to read the next chunk
-                        ctx.channel().read();
+                        System.out.println(server2OutboundChannel.bytesBeforeUnwritable());
+                        if(server2OutboundChannel.isWritable())
+                            ctx.channel().read();
                     } else {
                         future.channel().close();
                     }
