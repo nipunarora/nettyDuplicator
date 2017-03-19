@@ -87,7 +87,7 @@ public class DuplicatorFrontendHandler extends ChannelInboundHandlerAdapter {
                 .option(ChannelOption.AUTO_READ, false);
         ChannelFuture server3Future = server3Bootstrap.connect(remoteHost2, remotePort2);
         server3OutboundChannel = server3Future.channel();
-        System.out.println("High Water Mark" + server3OutboundChannel.config().getWriteBufferHighWaterMark());
+        //System.out.println("High Water Mark" + server3OutboundChannel.config().getWriteBufferHighWaterMark());
         // Here we are going to add channels to channel group to save bytebuf work
         //channels.add(server2OutboundChannel);
         //channels.add(server3OutboundChannel);
