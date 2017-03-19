@@ -115,10 +115,9 @@ public class DuplicatorFrontendHandler extends ChannelInboundHandlerAdapter {
         }
 
         if (server3OutboundChannel.isActive()) {
-            if(server3OutboundChannel.isWritable()) {
-                System.out.println("Writing and Flushing");
-                server3OutboundChannel.writeAndFlush(msg)
-                        .addListener(new ChannelFutureListener() {
+            //if(server3OutboundChannel.isWritable()) {
+                //System.out.println("Writing and Flushing");
+                server3OutboundChannel.writeAndFlush(msg).addListener(new ChannelFutureListener() {
                             @Override
                             public void operationComplete(ChannelFuture future) {
                                 if (future.isSuccess()) {
@@ -130,9 +129,8 @@ public class DuplicatorFrontendHandler extends ChannelInboundHandlerAdapter {
                                 }
                             }
                         });
-            }else{
-                System.out.println("Loop 1: Channel is no longer writeable");
-            }
+            //}else
+                //System.out.println("Loop 1: Channel is no longer writeable");
         }
 
 
